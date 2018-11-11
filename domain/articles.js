@@ -4,6 +4,7 @@ export const getArticles = async ({ $axios }) => {
     const loadedArticles = await $axios.$get(url)
     return loadedArticles
   } catch(error) {
-    console.log(error)
+    //console.log(error)
+    console.log('erorr1')
   }
 }

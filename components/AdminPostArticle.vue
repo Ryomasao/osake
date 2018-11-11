@@ -38,9 +38,9 @@ form(@submit.prevent="onSave")
       return {
         article: this.loadedArticle ? {... this.loadedArticle} 
         : {
-          inputImage: '',
+          inputImage: {},
           imagePath: '',
-          tags: '',
+          tags: [],
           date: new Date(),
           memo: '',
         },
@@ -50,6 +50,11 @@ form(@submit.prevent="onSave")
     mounted() {
       if(this.loadedArticle) {
         this.$refs.image.previewSrc = this.loadedArticle.imagePath
+
+        // 過去データにない場合がある
+        if(!this.article.inputImage) {
+          this.article.inputImage = {}
+        }
         this.article.inputImage.existedImage = true
         this.$refs.tags.tags = this.loadedArticle.tags
       }

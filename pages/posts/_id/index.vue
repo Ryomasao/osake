@@ -6,16 +6,24 @@
       p {{ loadedPost.memo }}
       .tags
         .tag(v-for="tag in loadedPost.tags") {{ tag }}
-    section.section
+    nuxt-link(:to="'/mypage/posts/' + id") 編集
 </template>
 
 <script>
   export default {
     async asyncData(context) {
-      const id = context.params.id
-      const url = `/articles/${id}.json`
-      const loadedPost = await context.app.$axios.$get(url)
-      return { loadedPost: loadedPost }
+      try {
+        const id = context.params.id
+        const url = `/articles/${id}.json`
+        const loadedPost = await context.app.$axios.$get(url)
+        console.log(loadedPost)
+        return { 
+          loadedPost: loadedPost,
+          id: id
+        }
+      } catch(error) {
+       console.log('error') 
+      }
     },
     computed: {
       date() {

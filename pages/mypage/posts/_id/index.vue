@@ -1,30 +1,62 @@
 <template lang="pug">
   section.section
     .container
-      AdminPostArtcle(:loaded-article="loadedPost" :id="id")
+      AdminPostArtcle(
+        :loaded-article="loadedPost" 
+        :id="id" 
+        @onSubmit="submit")
+    Modal(:showModal="showModal")
 </template>
 
 <script>
   import AdminPostArtcle from '~/components/AdminPostArticle'
+  import Modal from '~/components/Modal'
+  import firebase from '~/plugins/firebase'
 
   export default {
     components: {
-      AdminPostArtcle
+      AdminPostArtcle,
+      Modal
     },
     async asyncData(context) {
       const id = context.params.id
-      const url = `https://osake-d4cfe.firebaseio.com/articles/${id}.json`
+      const url = `/articles/${id}.json`
       const loadedPost = await context.app.$axios.$get(url)
       return { loadedPost: loadedPost , id: context.params.id }
     },
-    computed: {
-      date() {
-        //@Memo
-        // momentのプラグインをどこかで一括でできないだろうか
-        // plugins配下にmoment.jsをつくって適当にimport/exportしてラップしようとしたけどエラーになった
-        // 素のmomentをplugin化したほうがはやいかも？
-        this.$moment.updateLocale('ja', {weekdays: ["日","月","火","水","木","金","土"]})
-        return this.$moment(this.article.date).format('YYYY/MM/DD dddd曜日')
+    data() {
+      return {
+        showModal: false
+      }
+    },
+    methods: {
+      async submit(article) {
+        this.showModal = true
+
+        let storageRef = firebase.storage().ref()
+        let imagesRef = storageRef.child('images')
+        let spaceRef = imagesRef.child(article.inputImage.name)
+
+        try {
+          if(!article.inputImage.existedImage) {
+            const snapshot = await spaceRef.put(article.inputImage.image)
+            let bucketName = 'osake-d4cfe.appspot.com'
+            let filePath = spaceRef.fullPath
+            const imagePath = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodeURIComponent(filePath)}?alt=media`
+            article.imagePath = imagePath
+          }
+          await this.$axios.$put('https://osake-d4cfe.firebaseio.com/articles/' + this.id + '.json', article)
+        } catch (error) {
+          console.log(error)
+        }
+
+        this.showModal = false
+
+        this.$notify({
+          group: 'success',
+          title: 'メッセージ',
+          text: '更新しました！'
+        });
       }
     }
   }
