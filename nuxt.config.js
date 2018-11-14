@@ -32,7 +32,7 @@ module.exports = {
      '@fortawesome/fontawesome-free-webfonts/css/fa-brands.css',
      '@fortawesome/fontawesome-free-webfonts/css/fa-regular.css',
      '@fortawesome/fontawesome-free-webfonts/css/fa-solid.css',
-     '@/assets/css/main.sass',
+     '@/assets/css/main.scss',
   ],
 
   /*
