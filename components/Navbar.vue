@@ -12,10 +12,8 @@
         .navbar-start
           nuxt-link(to="/").navbar-item Home
           nuxt-link(to="/mypage/new-post").navbar-item 投稿する
-          nuxt-link(to="/").navbar-item Home
-          nuxt-link(to="/").navbar-item Home
-        .navbar-end
-          nuxt-link(to="/").navbar-item ログイン
+        //.navbar-end
+        //  nuxt-link(to="/").navbar-item ログイン
     </nav>
 </template>
 

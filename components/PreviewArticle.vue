@@ -2,7 +2,7 @@
 .article
   nuxt-link(:to="link")
     .article__header
-      p のんだ日: {{ date }}
+      p {{ date }}
     .article__body
       img(:src="article.imagePath")
 </template>
@@ -21,8 +21,8 @@
         // momentのプラグインをどこかで一括でできないだろうか
         // plugins配下にmoment.jsをつくって適当にimport/exportしてラップしようとしたけどエラーになった
         // 素のmomentをplugin化したほうがはやいかも？
-        this.$moment.updateLocale('ja', {weekdays: ["日","月","火","水","木","金","土"]})
-        return this.$moment(this.article.date).format('YYYY/MM/DD dddd曜日')
+        //this.$moment.updateLocale('ja', {weekdays: ["日","月","火","水","木","金","土"]})
+        return this.$moment(this.article.date).format('YYYY/MM/DD')
       }
     }
   }

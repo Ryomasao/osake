@@ -1,23 +1,19 @@
 <template lang="pug">
-  .columns
-    .column.is-four-fifths
+  div.main
       //section.section
       //  button(type="button" @click="login") ログインりだいれくと
       //  button(type="button" @click="check") 結果を確認
       section.section
-        ul 
-          li: nuxt-link(to="/mypage/new-post") 投稿する！
-          li: nuxt-link(to="/mypage") マイページへ
+          nuxt-link.button.is-large.is-fullwidth.is-success(to="/mypage/new-post") 投稿する！
+          //li: nuxt-link(to="/mypage") マイページへ
       section.section
         .container
-          .header みんなのおもいで
+          .header かねこのおもいで
           .articles
             PreviewArticle(v-for="article in articles"  
             :key="article.id" 
             :article="article" 
             mode="guest")
-    .column
-      section.section あとで追加する
 </template>
 
 <script>
