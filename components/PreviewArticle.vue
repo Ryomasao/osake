@@ -1,10 +1,10 @@
 <template lang="pug">
-  .article
-    nuxt-link(:to="link")
-      .article__header
-        p のんだ日: {{ date }}
-      .article__body
-        img(:src="article.imagePath")
+.article
+  nuxt-link(:to="link")
+    .article__header
+      p のんだ日: {{ date }}
+    .article__body
+      img(:src="article.imagePath")
 </template>
 <script>
   export default {
@@ -28,4 +28,11 @@
   }
 
 </script>
+
+<style lang="scss" scoped>
+.article {
+  width: 30%;
+}
+</style>
+
 
