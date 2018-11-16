@@ -1,5 +1,13 @@
 export const getPosts = async ({ $axios }, offset = 0) => {
 
+  // if-none-matchはetagをもとにしたキャッシュコントロール機能
+  // firebaseのqueryを使用するときに、このヘッダがついていると、エラーになるもよう
+  // ヘッダを付与しているのではaxiosなのかブラウザなのか不明
+  // etagが発行されると、勝手にブラウザが付与する？
+  // etagを発行しているのはサーバー側の初回アクセスだろうから、firebase?
+  // ブラウザでrestapiを参照してもetagついてないや
+
+  // とりあえずaxiosのheaderを変更する。ここで変更すると他にも影響ありそうなのでどっかで直す
   delete $axios.defaults.headers.common['if-none-match']
   const indexes = await getPostsIndexes($axios)
 
@@ -40,7 +48,7 @@ const getPostsIndexes = async ($axios) => {
   // firebaseにはoffset的なものがない
   // POSTするときに生成されるkeyはtimestampなので、こちらの利用ができる 
   // とはいえ、オブジェクト中の別のキーをもとにとかはできないかも
-  // ここでは、timestampのkeyをもとにやってみると
+  // ここでは、timestampのkeyをもとにやってみる
 
   try {
     const url ='/articles.json' 
