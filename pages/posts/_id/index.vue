@@ -1,12 +1,17 @@
 <template lang="pug">
   .single-post-page    
-    section.section
-      img(:src="loadedPost.imagePath")
-      p {{ loadedPost.date }}
-      p {{ loadedPost.memo }}
-      .tags
-        .tag(v-for="tag in loadedPost.tags") {{ tag }}
-    nuxt-link(:to="'/mypage/posts/' + id") 編集
+   .container
+      section.section
+        .post__image-wrapper
+          img(:src="loadedPost.imagePath").post__image
+        .post__date-wrapper
+          p.post__date {{ loadedPost.date }}
+        .post__memo-wrapper
+          p.post__memo {{ loadedPost.memo }}
+        .post__tags.tags
+          .tag(v-for="tag in loadedPost.tags") {{ tag }}
+        .post__button
+          nuxt-link.button.is-large.is-fullwidth.is-success(:to="'/mypage/posts/' + id") 編集する
 </template>
 
 <script>
@@ -16,7 +21,6 @@
         const id = context.params.id
         const url = `/articles/${id}.json`
         const loadedPost = await context.app.$axios.$get(url)
-        console.log(loadedPost)
         return { 
           loadedPost: loadedPost,
           id: id
@@ -37,3 +41,6 @@
     }
   }
 </script>
+
+<style lang="scss" scoped>
+</style>

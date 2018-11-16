@@ -8,7 +8,7 @@
           //li: nuxt-link(to="/mypage") マイページへ
       section.section
         .container
-          .header わたしのおもいで
+          .header.title わたしのおもいで
           .articles
             PreviewArticle(v-for="post in posts"  
             :key="post.id" 
