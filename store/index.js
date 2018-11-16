@@ -1,43 +1,46 @@
 import Vuex from 'vuex';
-import { getArticles } from '../domain/articles'
+import { getPosts } from '../domain/posts'
 
 const createStore = () => {
   return new Vuex.Store({
       state: {
         loadedPosts: [],
+        postCount: 0,
       },
       mutations: {
         setPosts(state, posts) {
-          state.loadedPosts = posts
+          for(const key in posts) {
+            state.loadedPosts.push({ ...posts[key] , id: key})
+          }
+        },
+        addPosts(state, posts) {
+          for(const key in posts) {
+            state.loadedPosts.push({ ...posts[key] , id: key})
+          }
+        },
+        addPostCount(state, count) {
+          state.postCount += count
         }
       },
       actions: {
         async nuxtServerInit(vuexContext, context) {
-          //const result = await this.$hoge.auth().getRedirectResult()
-          //console.log(result)
-          const loadedArticles  = await getArticles(context.app)
-          const tempArray = []
-
-          for (const key in loadedArticles) {
-              tempArray.push({ ...loadedArticles[key], id: key })
-           }
-
-          tempArray.sort((a, b) => {
-            if(new Date(a.date) > new Date(b.date)) {
-              return  -1
-            }
-            if(new Date(a.date) < new Date(b.date)) {
-              return  1
-            }
-            return 0
-          })
-
-          vuexContext.commit('setPosts', tempArray)
+          const loadedPosts  = await getPosts(context.app)
+          vuexContext.commit('setPosts', loadedPosts)
+          vuexContext.commit('addPostCount', Object.keys(loadedPosts).length)
+        },
+        async getMorePosts(vuexContext) {
+          const offset = vuexContext.getters.postCount + 1
+          const loadedPosts = await getPosts(this, offset)
+          vuexContext.commit('addPostCount', Object.keys(loadedPosts).length)
+          vuexContext.commit('addPosts', loadedPosts)
         }
       },
       getters: {
         loadedPosts(state) {
           return state.loadedPosts
+        },
+        postCount(state) {
+          return state.postCount
         }
       }
   })

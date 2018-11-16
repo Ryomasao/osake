@@ -8,12 +8,15 @@
           //li: nuxt-link(to="/mypage") マイページへ
       section.section
         .container
-          .header かねこのおもいで
+          .header わたしのおもいで
           .articles
-            PreviewArticle(v-for="article in articles"  
-            :key="article.id" 
-            :article="article" 
+            PreviewArticle(v-for="post in posts"  
+            :key="post.id" 
+            :article="post" 
             mode="guest")
+      section.section
+        button.button(@click="getMorePosts") もっと見る
+          
 </template>
 
 <script>
@@ -26,11 +29,14 @@ export default {
     PreviewArticle
   },
   computed: {
-    articles() {
+    posts() {
       return this.$store.getters.loadedPosts
     }
   },
   methods: {
+    getMorePosts() {
+      this.$store.dispatch('getMorePosts')
+    },
     //ログイン処理
     login() {
       console.log('test', firebase)
