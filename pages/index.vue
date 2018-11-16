@@ -15,7 +15,7 @@
             :article="post" 
             mode="guest")
       section.section
-        button.button(@click="getMorePosts") もっと見る
+        button.button.is-large.is-fullwidth.is-success(v-if="!hasAllPost" @click="getMorePosts") もっと見る
           
 </template>
 
@@ -31,6 +31,9 @@ export default {
   computed: {
     posts() {
       return this.$store.getters.loadedPosts
+    },
+    hasAllPost() {
+      return this.$store.getters.hasAllPost
     }
   },
   methods: {

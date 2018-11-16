@@ -6,6 +6,7 @@ const createStore = () => {
       state: {
         loadedPosts: [],
         postCount: 0,
+        hasAllPost: false
       },
       mutations: {
         setPosts(state, posts) {
@@ -20,6 +21,9 @@ const createStore = () => {
         },
         addPostCount(state, count) {
           state.postCount += count
+        },
+        hasAllPost(state) {
+          state.hasAllPost = true
         }
       },
       actions: {
@@ -31,6 +35,9 @@ const createStore = () => {
         async getMorePosts(vuexContext) {
           const offset = vuexContext.getters.postCount + 1
           const loadedPosts = await getPosts(this, offset)
+          if(Object.keys(loadedPosts).length === 0) {
+            vuexContext.commit('hasAllPost')
+          }
           vuexContext.commit('addPostCount', Object.keys(loadedPosts).length)
           vuexContext.commit('addPosts', loadedPosts)
         }
@@ -41,6 +48,9 @@ const createStore = () => {
         },
         postCount(state) {
           return state.postCount
+        },
+        hasAllPost(state) {
+          return state.hasAllPost
         }
       }
   })

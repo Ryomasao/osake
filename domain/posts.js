@@ -12,7 +12,7 @@ export const getPosts = async ({ $axios }, offset = 0) => {
   const indexes = await getPostsIndexes($axios)
 
   // 一度に取得する記事の件数
-  const count = 3
+  const count = 21
   const keys = Object.keys(indexes).sort()
   let index = 0
 
