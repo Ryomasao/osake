@@ -1,7 +1,7 @@
 {
-  "name": "scrape",
+  "name": "SoilAndBlue",
   "version": "1.0.0",
-  "description": "My well-made Nuxt.js project",
+  "description": "おいしいお酒と思い出を投稿しよう",
   "author": "tohu.masao",
   "private": true,
   "scripts": {
