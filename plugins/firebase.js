@@ -6,7 +6,7 @@ import 'firebase/functions'
 
 if (!firebase.apps.length) {
   firebase.initializeApp({
-    apiKey: process.env.fbApiKey,
+    apiKey: process.env.fbAPIKey,
     authDomain: "osake-d4cfe.firebaseapp.com",
     databaseURL: "https://osake-d4cfe.firebaseio.com",
     projectId: "osake-d4cfe",
