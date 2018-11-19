@@ -13,7 +13,6 @@
 </template>
 
 <script>
-  import firebase from '~/plugins/firebase'
 
   export default {
     data() {
@@ -23,21 +22,12 @@
       }
     },
     methods: {
-      async login() {
-
-        try {
-          // 新規ユーザーの作成
-          //const user = await firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
-
-          // 既存ユーザーの認証 
-          const user = await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
-
-          const token = await firebase.auth().currentUser.getIdToken(true)
-          localStorage.setItem('token', token.idToken)
-        } catch(error) {
-          console.log(error)
-        }
-      }
+      login() {
+        this.$store.dispatch('login')
+      },
+    },
+    mounted() {
+      this.$store.dispatch('check')
     }
   }
 </script>
