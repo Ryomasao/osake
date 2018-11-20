@@ -12,7 +12,7 @@ nav.navbar.is-link(role="navigation" aria-label="main navigation")
       nuxt-link(to="/mypage/new-post" v-if="isLogin").navbar-item 投稿する
       .navbar-item(@click="logout" v-if="isLogin") ログアウト
       .navbar-item() 当サイトについて(まだつくってない)
-  LoadingModal(:showModal="showModal")
+  LoadingModal(:showModal="!isLogin")
 </template>
 
 <script>
@@ -30,7 +30,7 @@ export default {
   data() {
     return {
       isActive: false,
-      showModal: false,
+      showModal: true,
     }
   },
   methods: {
@@ -41,11 +41,15 @@ export default {
       this.$store.dispatch('logout')
     }
   },
-  async mounted() {
-    if(!this.isLogin) {
-      this.showModal = true
-      await this.$store.dispatch('login')
-      this.showModal = false
+  beforeCreate() {
+    if(process.client) {
+      console.log('user:', this.$store.getters.user)
+      this.$store.dispatch('login')
+      .then((res) => {
+        this.showModal = false
+        console.log('res:', res)
+        console.log('user:', this.$store.getters.user)
+      })
     }
   }
 } 

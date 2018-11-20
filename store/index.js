@@ -99,6 +99,16 @@ const createStore = () => {
           return await firebase.auth().signInWithRedirect(provider);
         },
         async login(vuexContext) {
+
+          await firebase.auth().onAuthStateChanged(user => {
+            if(user) {
+              vuexContext.commit('setUser', user)
+            }
+          })
+
+          return 'exit'
+
+
           try {
             const result = await firebase.auth().getRedirectResult()
 
@@ -158,7 +168,7 @@ const createStore = () => {
           return state.token
         },
         isLogin(state) {
-          return state.token != null
+          return state.user != null
         }
       }
   })
