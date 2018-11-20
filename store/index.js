@@ -1,6 +1,7 @@
 import Vuex from 'vuex';
 import { getPosts } from '../domain/posts'
 import firebase from '~/plugins/firebase'
+import Cookie from  'js-cookie'
 
 const createStore = () => {
   return new Vuex.Store({
@@ -77,6 +78,7 @@ const createStore = () => {
             vuexContext.commit('setUser', {
               name: user.displayName
             })
+            Cookie.set('token', token)
           } catch(error) {
             // Handle Errors here.
             const errorCode = error.code
@@ -93,6 +95,7 @@ const createStore = () => {
           await firebase.auth().signOut()
           vuexContext.commit('clearToken')
           vuexContext.commit('clearUser')
+          Cookie.remove('token')
         }
       },
       getters: {
