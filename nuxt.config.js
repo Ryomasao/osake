@@ -79,16 +79,6 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    vendor: ['vue-notifications'], 
-    postcss: {
-      plugins: {
-        'postcss-cssnext': {
-          features: {
-            customProperties: false
-          }
-        }
-      }
-    },
     /*
     ** You can extend webpack config here
     */

@@ -33,6 +33,10 @@
     methods: {
       async submit(article) {
         this.showModal = true
+        await this.store.dispatch('editPost', this,id, post)
+        .catch(error => {
+
+        })
 
         let storageRef = firebase.storage().ref()
         let imagesRef = storageRef.child('images')

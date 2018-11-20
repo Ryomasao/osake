@@ -76,12 +76,6 @@ const createStore = () => {
           vuexContext.commit('addPostCount', Object.keys(loadedPosts).length)
           vuexContext.commit('addPosts', loadedPosts)
         },
-        async auth(vuexContext) {
-          //Poriverに再認証する場合は、古いCookieを消しておく
-          Cookie.remove('token')
-          const provider = new firebase.auth.GoogleAuthProvider();
-          return await firebase.auth().signInWithRedirect(provider);
-        },
         async createPost(vuexContext, post) {
           const token = vuexContext.getters.token
           const postedData =  await createPost(this.$axios, post, token)
@@ -89,6 +83,20 @@ const createStore = () => {
             throw error
           })
           return postedData
+        },
+        async editPost(vuexContext, id, post) {
+          const token = vuexContext.getters.token
+          const postedData =  await createPost(this.$axios, post, token)
+          .catch(error => {
+            throw error
+          })
+          return postedData
+        },
+        async auth(vuexContext) {
+          //Poriverに再認証する場合は、古いCookieを消しておく
+          Cookie.remove('token')
+          const provider = new firebase.auth.GoogleAuthProvider();
+          return await firebase.auth().signInWithRedirect(provider);
         },
         async login(vuexContext) {
           try {
@@ -103,7 +111,7 @@ const createStore = () => {
             // AuthProvider側が未ログインの場合
             if(!result.user) {
               console.log('provider側が未loginかな')
-              
+              return   
             }
 
             // The signed-in user info.

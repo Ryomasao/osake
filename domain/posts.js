@@ -78,6 +78,7 @@ export const createPost = async ($axios, post, token) => {
     throw error
   })
 
+  console.log('here')
 
   const postedData = await $axios.$post('/articles.json?auth=' + token, post)
   .catch(error => {
@@ -92,7 +93,7 @@ export const createPost = async ($axios, post, token) => {
   return postedData
 }
 
-const uploadImage =  async(image, imageName, token) => {
+const uploadImage =  async(image, imageName) => {
     const storageRef = firebase.storage().ref()
     const imagesRef = storageRef.child('images')
     const spaceRef = imagesRef.child(imageName)
