@@ -36,7 +36,9 @@ nav.navbar.is-link(role="navigation" aria-label="main navigation")
       }
     },
     async mounted() {
-      await this.$store.dispatch('login')
+      if(!this.isLogin) {
+        await this.$store.dispatch('login')
+      }
     }
   } 
 </script>

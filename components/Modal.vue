@@ -1,9 +1,8 @@
 <template lang="pug">
-.modal(:style="showModal ? 'display: block' : 'display: none'")
+.modal(:class="showModal ? 'is-active' : ''")
   .modal-background
   .modal-content
-    .image-wrapper
-      img(src="~/assets/images/loading.gif")
+      slot
 </template>
 
 <script>
@@ -14,10 +13,5 @@
   }
 </script>
 
-<style lang="sass">
-.image-wrapper
-  height: 100vh
-  display: flex
-  justify-content: center
-  align-items: center
+<style lang="scss">
 </style>

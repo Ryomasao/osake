@@ -1,5 +1,5 @@
 import Vuex from 'vuex';
-import { getPosts } from '../domain/posts'
+import { getPosts, createPost } from '../domain/posts'
 import firebase from '~/plugins/firebase'
 import Cookie from  'js-cookie'
 
@@ -76,9 +76,19 @@ const createStore = () => {
           vuexContext.commit('addPostCount', Object.keys(loadedPosts).length)
           vuexContext.commit('addPosts', loadedPosts)
         },
-        auth(vuexContext) {
+        async auth(vuexContext) {
+          //Poriverに再認証する場合は、古いCookieを消しておく
+          Cookie.remove('token')
           const provider = new firebase.auth.GoogleAuthProvider();
-          firebase.auth().signInWithRedirect(provider);
+          return await firebase.auth().signInWithRedirect(provider);
+        },
+        async createPost(vuexContext, post) {
+          const token = vuexContext.getters.token
+          const postedData =  await createPost(this.$axios, post, token)
+          .catch(error => {
+            throw error
+          })
+          return postedData
         },
         async login(vuexContext) {
           try {
@@ -89,6 +99,13 @@ const createStore = () => {
               const gToken = result.credential.accessToken
               console.log('gtoken', gToken)
             }
+
+            // AuthProvider側が未ログインの場合
+            if(!result.user) {
+              console.log('provider側が未loginかな')
+              
+            }
+
             // The signed-in user info.
             const user = await firebase.auth().currentUser
             const token = await user.getIdToken(true)
@@ -112,9 +129,8 @@ const createStore = () => {
         },
         async logout(vuexContext) {
           await firebase.auth().signOut()
-          vuexContext.commit('clearToken')
-          vuexContext.commit('clearUser')
           Cookie.remove('token')
+          location.href = '/'
         }
       },
       getters: {

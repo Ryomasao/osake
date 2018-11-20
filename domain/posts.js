@@ -1,3 +1,5 @@
+import firebase from '~/plugins/firebase'
+
 export const getPosts = async ({ $axios }, offset = 0) => {
 
   // axiosのonRequestではなく一旦クエリパラメータで渡す
@@ -68,4 +70,42 @@ const getPostsIndexes = async ($axios) => {
   } catch(error) {
     console.log('Error: getPostsIndexesError ', error)
   }
+}
+
+export const createPost = async ($axios, post, token) => {
+  post.imagePath = await uploadImage(post.inputImage.image, post.inputImage.name)
+  .catch(error => {
+    throw error
+  })
+
+
+  const postedData = await $axios.$post('/articles.json?auth=' + token, post)
+  .catch(error => {
+    //console.log('%O', error)
+    const response = {
+      statusCode: error.response.status,
+      message: error.message,
+    }
+    throw response
+  })
+  
+  return postedData
+}
+
+const uploadImage =  async(image, imageName, token) => {
+    const storageRef = firebase.storage().ref()
+    const imagesRef = storageRef.child('images')
+    const spaceRef = imagesRef.child(imageName)
+
+    await spaceRef.put(image)
+    .catch(error => {
+      console.log('Error: uploadImage ', error)
+      throw error
+    })
+
+    const bucketName = 'osake-d4cfe.appspot.com'
+    const filePath = spaceRef.fullPath
+    // 画像のURLはこんな形式に設定されるみたい
+    const imagePath = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodeURIComponent(filePath)}?alt=media`
+    return imagePath
 }

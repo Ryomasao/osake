@@ -5,18 +5,19 @@
         :loaded-article="loadedPost" 
         :id="id" 
         @onSubmit="submit")
-    Modal(:showModal="showModal")
+    LoadingModal(:showModal="showModal")
 </template>
 
 <script>
   import AdminPostArtcle from '~/components/AdminPostArticle'
-  import Modal from '~/components/Modal'
+  import LoadingModal from '~/components/LoadingModal'
   import firebase from '~/plugins/firebase'
 
   export default {
+    middleware: ['auth'],
     components: {
       AdminPostArtcle,
-      Modal
+      LoadingModal
     },
     async asyncData(context) {
       const id = context.params.id

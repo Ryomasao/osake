@@ -44,6 +44,13 @@ module.exports = {
     { src:'~/plugins/vue-notifications', ssr: false }
   ],
 
+  /**
+   * middleware
+   */
+  router: {
+    //middleware: ['auth']
+  },
+
   /*
   ** Nuxt.js modules
   */

@@ -2,46 +2,58 @@
   section.section
     .container
       AdminPostArticle(@onSubmit="submit" ref="adminPostArticle")
-    Modal(:showModal="showModal")
+    LoadingModal(:showModal="showModal")
+    NotifyModal(:showModal="isError" 
+    title="ごめんね" 
+    :message="message"
+    :buttonText="buttonText"
+    :buttonMethod="auth"
+    )
 </template>
 
 <script>
   import AdminPostArticle from '~/components/AdminPostArticle'
-  import Modal from '~/components/Modal'
+  import LoadingModal from '~/components/LoadingModal'
+  import NotifyModal from '~/components/NotifyModal'
   import firebase from '~/plugins/firebase'
 
   export default {
+    middleware: ['auth'],
     components: {
       AdminPostArticle,
-      Modal
+      LoadingModal,
+      NotifyModal
     },
     data() {
       return {
-        showModal: false
+        showModal: false,
+        isError: false,
+        message: '',
+        buttonText: '',
       }
     },
     methods: {
-      async submit(article) {
+      async submit(post) {
         this.showModal = true
+        const result = await this.$store.dispatch('createPost', post)
+        .catch(error => {
+          this.showModal = false
+          this.isError = true
+          if(error.statusCode === 401) {
+            this.message = '投稿した際にエラーになってしまったよ。ログインしなおすとおなおるかも'
+            this.buttonText = '再度、ログインする'
+          } else {
+            this.message = 'なんかだめかも'
+            console.log(error)
+          }
+        })
 
-        let storageRef = firebase.storage().ref()
-        let imagesRef = storageRef.child('images')
-        let spaceRef = imagesRef.child(article.inputImage.name)
-
-        try {
-          const snapshot = await spaceRef.put(article.inputImage.image)
-          let bucketName = 'osake-d4cfe.appspot.com'
-          let filePath = spaceRef.fullPath
-          // 画像のURLはこんな形式に設定されるみたい
-          const imagePath = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodeURIComponent(filePath)}?alt=media`
-          article.imagePath = imagePath
-          await this.$axios.$post('https://osake-d4cfe.firebaseio.com/articles.json', article)
-        } catch (error) {
-          console.log(error)
-        }
-
+        if(this.isError) return
         this.showModal = false
 
+        this.success()
+      },
+      success() {
         this.$notify({
           group: 'success',
           title: 'メッセージ',
@@ -50,16 +62,13 @@
 
         //子コンポーネントの値をリセットする
         this.$refs.adminPostArticle.reset()
-
+      },
+      auth() {
+        this.$store.dispatch('auth')
       }
     }
   }
 </script>
 
-<style lang="sass">
-.image-wrapper
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+<style lang="scss">
 </style>

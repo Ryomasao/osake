@@ -22,6 +22,7 @@
     methods: {
       onChange(e) {
         this.existedImage = false
+        if(!e.target.files[0]) return 
         this.image = e.target.files[0]
         this.fileName= e.target.files[0].name
         this.previewSrc = window.URL.createObjectURL(this.image)

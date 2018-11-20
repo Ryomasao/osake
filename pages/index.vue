@@ -17,7 +17,6 @@
 
 <script>
 import PreviewArticle from '~/components/PreviewArticle.vue'
-import firebase from '~/plugins/firebase'
 import axios from 'axios'
 
 export default {
