@@ -44,9 +44,28 @@ const createStore = () => {
       },
       actions: {
         async nuxtServerInit(vuexContext, context) {
+
+          // 未認証でも実行する処理
           const loadedPosts  = await getPosts(context.app)
           vuexContext.commit('setPosts', loadedPosts)
           vuexContext.commit('addPostCount', Object.keys(loadedPosts).length)
+
+          // cookieが存在しない(未認証)
+          if(!context.req.headers.cookie) {
+            return 
+          }
+          const cookie = context.req.headers.cookie
+          const tokenCookie = cookie.split(';').find(
+            c => c.trim().startsWith('token=')
+          )
+
+          // cookieはあるがtokenはない
+          if(tokenCookie == null) {
+            return 
+          }
+
+          const token = tokenCookie.split('=')[1]
+          vuexContext.commit('setToken', token)
         },
         async getMorePosts(vuexContext) {
           const offset = vuexContext.getters.postCount + 1

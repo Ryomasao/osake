@@ -1,5 +1,8 @@
 export const getPosts = async ({ $axios }, offset = 0) => {
 
+  // axiosのonRequestではなく一旦クエリパラメータで渡す
+  //const token = store.getters.token
+
   // if-none-matchはetagをもとにしたキャッシュコントロール機能
   // firebaseのqueryを使用するときに、このヘッダがついていると、エラーになるもよう
   // ヘッダを付与しているのではaxiosなのかブラウザなのか不明
@@ -32,16 +35,19 @@ export const getPosts = async ({ $axios }, offset = 0) => {
       params: {
         orderBy: '"$key"',
         startAt: '"' + index + '"',
-        limitToFirst: count
+        limitToFirst: count,
+        //auth: token
       }
     })
     return loadedPosts
   } catch(error) {
-    console.log(error)
+    console.log('Error: getPost ', error)
   }
 }
 
 const getPostsIndexes = async ($axios) => {
+
+  //const token = store.getters.token
 
   // https://howtofirebase.com/firebase-data-structures-pagination-96c16ffdb5ca
   // 直近の10件だけとりあえずとってくるパターンをどう実装したらよいのか。
@@ -54,11 +60,12 @@ const getPostsIndexes = async ($axios) => {
     const url ='/articles.json' 
     const data = await $axios.$get(url, {
       params: {
-        shallow: true
+        shallow: true,
+        //auth: token
       }
     })
     return data
   } catch(error) {
-    console.log('error')
+    console.log('Error: getPostsIndexesError ', error)
   }
 }
