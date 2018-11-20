@@ -8,40 +8,55 @@ nav.navbar.is-link(role="navigation" aria-label="main navigation")
       span(aria-hidden="true")
       span(aria-hidden="true")
   .navbar-menu(:class="{'is-active': isActive}")
-    .navbar-start(v-if="isLogin")
-      nuxt-link(to="/mypage/new-post").navbar-item 投稿する
-      .navbar-item(@click="logout") ログアウト
-    .navbar-start(v-else)
-      .navbar-item(@click="authenticate") Googleでログインする
+    .navbar-start()
+      nuxt-link(to="/mypage/new-post" v-if="isLogin").navbar-item 投稿する
+      .navbar-item(@click="logout" v-if="isLogin") ログアウト
+      .navbar-item() 当サイトについて(まだつくってない)
+  LoadingModal(:showModal="showModal")
 </template>
 
 <script>
-  export default {
-    computed: {
-      isLogin() {
-        return this.$store.getters.isLogin
-      }
-    },
-    data() {
-      return {
-        isActive: false,
-      }
-    },
-    methods: {
-      authenticate() {
-        this.$store.dispatch('auth')
-      },
-      logout() {
-        this.$store.dispatch('logout')
-      }
-    },
-    async mounted() {
-      if(!this.isLogin) {
-        await this.$store.dispatch('login')
-      }
+import LoadingModal from '~/components/LoadingModal'
+
+export default {
+  components: {
+    LoadingModal
+  },
+  computed: {
+    isLogin() {
+      return this.$store.getters.isLogin
     }
-  } 
+  },
+  data() {
+    return {
+      isActive: false,
+      showModal: false,
+    }
+  },
+  methods: {
+    authenticate() {
+      this.$store.dispatch('auth')
+    },
+    logout() {
+      this.$store.dispatch('logout')
+    }
+  },
+  async mounted() {
+    if(!this.isLogin) {
+      this.showModal = true
+      await this.$store.dispatch('login')
+      this.showModal = false
+    }
+  }
+} 
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
+.navbar-item {
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.5;
+  }
+}
 </style>
 

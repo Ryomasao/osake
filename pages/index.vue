@@ -1,7 +1,7 @@
 <template lang="pug">
   div.main
       section.section
-          nuxt-link.button.is-large.is-fullwidth.is-success(to="/mypage/new-post") 投稿する！
+          nuxt-link.button.is-large.is-fullwidth.is-success(to="/mypage/new-post") {{ postButtonText}}
       section.section
         .container
           .header.title わたしのおもいで
@@ -29,6 +29,11 @@ export default {
     },
     hasAllPost() {
       return this.$store.getters.hasAllPost
+    },
+    postButtonText() {
+      return this.$store.getters.isLogin ? 
+      '投稿する！' :
+      'Googleでログインして投稿する！' 
     }
   },
   methods: {

@@ -12,7 +12,11 @@ export default {
     Modal
   },
   props: {
-    showModal: Boolean
+    showModal: Boolean,
+    imagePath: {
+      type: String,
+      default: '~/assets/images/loading.gif'
+    }
   },
 }
 </script>

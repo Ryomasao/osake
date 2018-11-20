@@ -1,3 +1,4 @@
+//@ToDo Nuxt2からimport exportが使えるとのこと
 const pkg = require('./package')
 require('dotenv').config()
 
@@ -40,7 +41,6 @@ module.exports = {
   */
   plugins: [
     '~/plugins/firebase',
-    '~/plugins/test',
     { src:'~/plugins/vue-notifications', ssr: false }
   ],
 
@@ -57,8 +57,6 @@ module.exports = {
   modules: [
     // Doc: https://github.com/nuxt-community/axios-module#usage
     '@nuxtjs/axios',
-    // Doc:https://github.com/nuxt-community/modules/tree/master/packages/bulma
-    // '@nuxtjs/bulma', 
     // en jp以外の言語プラグインは除くというオプションかな
     ['@nuxtjs/moment', 'jp'],
   ],
