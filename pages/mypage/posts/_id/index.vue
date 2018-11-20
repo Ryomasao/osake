@@ -31,29 +31,15 @@
       }
     },
     methods: {
-      async submit(article) {
+      async submit(post) {
         this.showModal = true
-        await this.store.dispatch('editPost', this,id, post)
-        .catch(error => {
-
+        await this.$store.dispatch('editPost', {
+          id: this.id,
+          post: post
         })
-
-        let storageRef = firebase.storage().ref()
-        let imagesRef = storageRef.child('images')
-        let spaceRef = imagesRef.child(article.inputImage.name)
-
-        try {
-          if(!article.inputImage.existedImage) {
-            const snapshot = await spaceRef.put(article.inputImage.image)
-            let bucketName = 'osake-d4cfe.appspot.com'
-            let filePath = spaceRef.fullPath
-            const imagePath = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodeURIComponent(filePath)}?alt=media`
-            article.imagePath = imagePath
-          }
-          await this.$axios.$put('https://osake-d4cfe.firebaseio.com/articles/' + this.id + '.json', article)
-        } catch (error) {
-          console.log(error)
-        }
+        .catch(error => {
+          console.log('erorr', error)
+        })
 
         this.showModal = false
 

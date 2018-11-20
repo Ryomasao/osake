@@ -1,5 +1,5 @@
 import Vuex from 'vuex';
-import { getPosts, createPost } from '../domain/posts'
+import { getPosts, createPost, editPost } from '../domain/posts'
 import firebase from '~/plugins/firebase'
 import Cookie from  'js-cookie'
 
@@ -84,9 +84,9 @@ const createStore = () => {
           })
           return postedData
         },
-        async editPost(vuexContext, id, post) {
+        async editPost(vuexContext, post) {
           const token = vuexContext.getters.token
-          const postedData =  await createPost(this.$axios, post, token)
+          const postedData =  await editPost(this.$axios, post, token)
           .catch(error => {
             throw error
           })

@@ -78,9 +78,32 @@ export const createPost = async ($axios, post, token) => {
     throw error
   })
 
-  console.log('here')
+  // @ToDo ↑のthorwをすることで、後続が処理されることなく、return されるはず、、、
+  // testを書いて、ちゃんとasync await promiseをもっかい理解しよう
 
   const postedData = await $axios.$post('/articles.json?auth=' + token, post)
+  .catch(error => {
+    //console.log('%O', error)
+    const response = {
+      statusCode: error.response.status,
+      message: error.message,
+    }
+    throw response
+  })
+  
+  return postedData
+}
+
+export const editPost = async ($axios, { id, post }, token) => {
+
+  // 更新時に、画像が置き換わっていた場合
+  if(!post.inputImage.existedImage) {
+    post.imagePath = await uploadImage(post.inputImage.image, post.inputImage.name)
+    .catch(error => {
+      throw error
+    })
+  } 
+  const postedData = await $axios.$put('/articles/' + id + '.json?auth=' + token, post)
   .catch(error => {
     //console.log('%O', error)
     const response = {
@@ -98,6 +121,8 @@ const uploadImage =  async(image, imageName) => {
     const imagesRef = storageRef.child('images')
     const spaceRef = imagesRef.child(imageName)
 
+    // 画像のアップロードについてはtokenを指定していない
+    // firebase.auth()で認証した状態をもっているんだと思う
     await spaceRef.put(image)
     .catch(error => {
       console.log('Error: uploadImage ', error)
