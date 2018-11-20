@@ -27,7 +27,7 @@
       },
     },
     mounted() {
-      this.$store.dispatch('check')
+      this.$store.dispatch('login')
     }
   }
 </script>

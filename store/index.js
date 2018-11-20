@@ -7,7 +7,9 @@ const createStore = () => {
       state: {
         loadedPosts: [],
         postCount: 0,
-        hasAllPost: false
+        hasAllPost: false,
+        user: null,
+        token: null,
       },
       mutations: {
         setPosts(state, posts) {
@@ -25,6 +27,18 @@ const createStore = () => {
         },
         hasAllPost(state) {
           state.hasAllPost = true
+        },
+        setUser(state, user) {
+          state.user = user
+        },
+        setToken(state, token) {
+          state.token = token
+        },
+        clearUser(state) {
+          state.user = null
+        },
+        clearToken(state) {
+          state.token = null
         }
       },
       actions: {
@@ -42,24 +56,27 @@ const createStore = () => {
           vuexContext.commit('addPostCount', Object.keys(loadedPosts).length)
           vuexContext.commit('addPosts', loadedPosts)
         },
-        login(vuexContext) {
+        auth(vuexContext) {
           const provider = new firebase.auth.GoogleAuthProvider();
           firebase.auth().signInWithRedirect(provider);
         },
-        async check(vuexContext) {
+        async login(vuexContext) {
           try {
             const result = await firebase.auth().getRedirectResult()
 
-            //if (result.credential) {
-            //  // This gives you a Google Access Token. You can use it to access the Google API.
-            //  const token = result.credential.accessToken
-            //}
+            if (result.credential) {
+              // This gives you a Google Access Token. You can use it to access the Google API.
+              const gToken = result.credential.accessToken
+              console.log('gtoken', gToken)
+            }
             // The signed-in user info.
-            const user = result.user
-            console.log(user)
-            const token = await firebase.auth().currentUser.getIdToken(true)
-            console.log(token)
+            const user = await firebase.auth().currentUser
+            const token = await user.getIdToken(true)
 
+            vuexContext.commit('setToken', token)
+            vuexContext.commit('setUser', {
+              name: user.displayName
+            })
           } catch(error) {
             // Handle Errors here.
             const errorCode = error.code
@@ -71,6 +88,11 @@ const createStore = () => {
             // ...
             console.log('error', error)
           }
+        },
+        async logout(vuexContext) {
+          await firebase.auth().signOut()
+          vuexContext.commit('clearToken')
+          vuexContext.commit('clearUser')
         }
       },
       getters: {
@@ -82,6 +104,15 @@ const createStore = () => {
         },
         hasAllPost(state) {
           return state.hasAllPost
+        },
+        user(state) {
+          return state.user
+        },
+        token(state) {
+          return state.token
+        },
+        isLogin(state) {
+          return state.token != null
         }
       }
   })
