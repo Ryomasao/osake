@@ -1,5 +1,5 @@
 <template lang="pug">
-Modal.loading-modal(:showModal="showModal")
+Modal.notify-modal(:showModal="showModal")
   .box
     .title {{ title }}
     p {{ message }}

@@ -77,7 +77,15 @@ const createStore = () => {
           vuexContext.commit('addPosts', loadedPosts)
         },
         async createPost(vuexContext, post) {
-          const token = vuexContext.getters.token
+          // tokenの有効期限は1時間。でもProviderからもらう？userはほぼ無期限
+          // 有効期限をどう考えていいかよくわからない
+          // とりあえず、操作時にtoken有効期限切れは微妙なので、都度tokenを取得する
+          // getIdTokenは有効期限が切れてれば、リフレッシュトークンを使ってとってくる
+          // 有効期限が切れてなければ、大丈夫
+          const token = await vuexContext.getters.user.getIdToken(true)
+
+          //SSR時にtokenを使うことを考慮して、Cookieのtokenも有効にしておく
+          Cookie.set('token', token)
           const postedData =  await createPost(this.$axios, post, token)
           .catch(error => {
             throw error
@@ -85,7 +93,8 @@ const createStore = () => {
           return postedData
         },
         async editPost(vuexContext, post) {
-          const token = vuexContext.getters.token
+          const token = await vuexContext.getters.user.getIdToken(true)
+          Cookie.set('token', token)
           const postedData =  await editPost(this.$axios, post, token)
           .catch(error => {
             throw error
@@ -100,40 +109,8 @@ const createStore = () => {
         },
         async login(vuexContext) {
 
-          await firebase.auth().onAuthStateChanged(user => {
-            if(user) {
-              vuexContext.commit('setUser', user)
-            }
-          })
-
-          return 'exit'
-
-
-          try {
-            const result = await firebase.auth().getRedirectResult()
-
-            if (result.credential) {
-              // This gives you a Google Access Token. You can use it to access the Google API.
-              const gToken = result.credential.accessToken
-              console.log('gtoken', gToken)
-            }
-
-            // AuthProvider側が未ログインの場合
-            if(!result.user) {
-              console.log('provider側が未loginかな')
-              return   
-            }
-
-            // The signed-in user info.
-            const user = await firebase.auth().currentUser
-            const token = await user.getIdToken(true)
-
-            vuexContext.commit('setToken', token)
-            vuexContext.commit('setUser', {
-              name: user.displayName
-            })
-            Cookie.set('token', token)
-          } catch(error) {
+          const result = await firebase.auth().getRedirectResult()
+          .catch(error => {
             // Handle Errors here.
             const errorCode = error.code
             const errorMessage = error.message
@@ -141,14 +118,36 @@ const createStore = () => {
             const email = error.email
             // The firebase.auth.AuthCredential type that was used.
             const credential = error.credential
-            // ...
             console.log('error', error)
+          })
+
+          if (result.credential) {
+            // GoogleのOAuthのToken GoogleのAPIを叩くのであれば必要
+            // 今のところ不要そうなので、使ってない
+            const gToken = result.credential.accessToken
           }
+
+          // AuthProvider側が未ログインの場合
+          if(!result.user) {
+            return false
+          }
+
+          const user = result.user
+          const token = await user.getIdToken(true)
+
+          vuexContext.commit('setToken', token)
+          vuexContext.commit('setUser', user)
+
+          Cookie.set('token', token)
+          return user
         },
         async logout(vuexContext) {
           await firebase.auth().signOut()
           Cookie.remove('token')
           location.href = '/'
+        },
+        setUser(vuexContext, user) {
+          vuexContext.commit('setUser', user)
         }
       },
       getters: {
@@ -167,8 +166,11 @@ const createStore = () => {
         token(state) {
           return state.token
         },
+        //loginをしているかどうかは、本来userで見るべきな気がする
+        //というのもtokenの有効期限は1時間しかなく、このtokenはpost更新時に都度更新しているから
+        //ただuserのセットをpluginでやってて、pluginだと若干タイムラグがある
         isLogin(state) {
-          return state.user != null
+          return state.token != null
         }
       }
   })

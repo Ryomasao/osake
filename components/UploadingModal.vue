@@ -1,16 +1,14 @@
 <template lang="pug">
 Modal.loading-modal(:showModal="showModal")
-  Google(size="250px")
-  p ログイン中・・・
+  .image-wrapper
+    img(src="~/assets/images/loading.gif")
 </template>
 
 <script>
-import { Google } from 'vue-loading-spinner'
 import Modal from '~/components/Modal'
 
 export default {
   components: {
-    Google,
     Modal
   },
   props: {
@@ -20,7 +18,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.loading-modal {
+.image-wrapper {
   text-align: center;
 }
 </style>

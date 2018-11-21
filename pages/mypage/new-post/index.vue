@@ -2,7 +2,7 @@
   section.section
     .container
       AdminPostArticle(@onSubmit="submit" ref="adminPostArticle")
-    LoadingModal(:showModal="showModal")
+    UploadingModal(:showModal="showModal")
     NotifyModal(:showModal="isError" 
     title="ごめんね" 
     :message="message"
@@ -13,15 +13,14 @@
 
 <script>
   import AdminPostArticle from '~/components/AdminPostArticle'
-  import LoadingModal from '~/components/LoadingModal'
+  import UploadingModal from '~/components/UploadingModal'
   import NotifyModal from '~/components/NotifyModal'
-  import firebase from '~/plugins/firebase'
 
   export default {
     middleware: ['auth'],
     components: {
       AdminPostArticle,
-      LoadingModal,
+      UploadingModal,
       NotifyModal
     },
     data() {

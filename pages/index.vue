@@ -1,10 +1,14 @@
 <template lang="pug">
   div.main
       section.section
-          nuxt-link.button.is-large.is-fullwidth.is-success(to="/mypage/new-post") {{ postButtonText}}
+          .main__header(v-if="!isLogin")
+            nuxt-link.button.is-large.is-fullwidth.is-success(to="/auth" ) ログインする！
+            p お酒の記事を投稿するにはログインが必要です
+          .main__header(v-else)
+            nuxt-link.button.is-large.is-fullwidth.is-success(to="/mypage/new-post") 投稿する！
       section.section
         .container
-          .header.title わたしのおもいで
+          .header.title みんなのおもいで
           .articles
             PreviewArticle(v-for="post in posts"  
             :key="post.id" 
@@ -24,6 +28,9 @@ export default {
     PreviewArticle
   },
   computed: {
+    isLogin() {
+      return this.$store.getters.isLogin
+    },
     posts() {
       return this.$store.getters.loadedPosts
     },

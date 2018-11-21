@@ -41,6 +41,7 @@ module.exports = {
   */
   plugins: [
     '~/plugins/firebase',
+    { src:'~/plugins/store', ssr: false },
     { src:'~/plugins/vue-notifications', ssr: false }
   ],
 
