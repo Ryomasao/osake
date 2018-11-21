@@ -32,7 +32,8 @@ form(@submit.prevent="onSave")
     },
     props: {
       loadedArticle: Object,
-      isUpdate: Boolean
+      isUpdate: Boolean,
+      propUserId: String
     },
     data() {
       return {
@@ -43,6 +44,10 @@ form(@submit.prevent="onSave")
           tags: [],
           date: new Date(),
           memo: '',
+          // このdataってSSRも考慮するのかも？
+          // propsのuseridってSSR時は空になる。userId : this.userId は空だった
+          //userId: this.props.userId
+          userId: this.propUserId 
         },
         errors: [],
       }

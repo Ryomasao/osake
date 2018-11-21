@@ -1,7 +1,7 @@
 <template lang="pug">
   section.section
     .container
-      AdminPostArticle(@onSubmit="submit" ref="adminPostArticle")
+      AdminPostArticle(@onSubmit="submit" ref="adminPostArticle" :propUserId="userId")
     UploadingModal(:showModal="showModal")
     NotifyModal(:showModal="isError" 
     title="ごめんね" 
@@ -29,6 +29,15 @@
         isError: false,
         message: '',
         buttonText: '',
+      }
+    },
+    computed: {
+      userId() {
+        // SSR時にuserはいないのでエラーになるのを回避する 
+        // AdminPostArticleにno-ssrつけたけど意味がなかった
+        if(this.$store.getters.user) {
+          return this.$store.getters.user.uid
+        }
       }
     },
     methods: {

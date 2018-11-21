@@ -73,7 +73,7 @@ const getPostsIndexes = async ($axios) => {
 }
 
 export const createPost = async ($axios, post, token) => {
-  post.imagePath = await uploadImage(post.inputImage.image, post.inputImage.name)
+  post.imagePath = await uploadImage(post.inputImage.image, post.userId + '_' + post.inputImage.name)
   .catch(error => {
     throw error
   })
@@ -81,7 +81,9 @@ export const createPost = async ($axios, post, token) => {
   // @ToDo ↑のthorwをすることで、後続が処理されることなく、return されるはず、、、
   // testを書いて、ちゃんとasync await promiseをもっかい理解しよう
 
-  const postedData = await $axios.$post('/articles.json?auth=' + token, post)
+  //https://medium.com/google-cloud-jp/firestore2-920ac799345c
+  const url = `/users/${post.userId}/post.json?auth=${token}`
+  const postedData = await $axios.$post(url, post)
   .catch(error => {
     //console.log('%O', error)
     const response = {
