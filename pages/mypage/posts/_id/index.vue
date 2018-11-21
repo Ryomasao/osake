@@ -5,6 +5,8 @@
         :loaded-article="loadedPost" 
         :id="id" 
         @onSubmit="submit")
+      section.section
+        button.button.is-danger.is-medium.is-fullwidth(type="button") 削除する
     UploadingModal(:showModal="showModal")
     NotifyModal(:showModal="isError" 
     title="ごめんね" 
