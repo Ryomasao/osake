@@ -20,8 +20,10 @@
 </template>
 
 <script>
-import PreviewArticle from '~/components/PreviewArticle.vue'
 import axios from 'axios'
+
+import PreviewArticle from '~/components/PreviewArticle.vue'
+import { getPosts } from '../domain/posts'
 
 export default {
   components:{
@@ -48,6 +50,10 @@ export default {
       this.$store.dispatch('getMorePosts')
     },
   },
+  async created() {
+    const loadedPosts  = await getPosts(this)
+    this.$store.dispatch('setPosts', loadedPosts)
+  }
   /*
   async asyncData(context) {
     let { data } = await context.app.$axios.get('https://osake-d4cfe.firebaseio.com/articles.json')

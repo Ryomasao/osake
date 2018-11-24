@@ -76,6 +76,10 @@ const createStore = () => {
           vuexContext.commit('addPostCount', Object.keys(loadedPosts).length)
           vuexContext.commit('addPosts', loadedPosts)
         },
+        setPosts({ commit }, loadedPosts) {
+          commit('addPostCount', Object.keys(loadedPosts).length)
+          commit('addPosts', loadedPosts)
+        },
         async createPost(vuexContext, post) {
           // tokenの有効期限は1時間。でもProviderからもらう？userはほぼ無期限
           // 有効期限をどう考えていいかよくわからない
