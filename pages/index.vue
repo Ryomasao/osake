@@ -51,8 +51,10 @@ export default {
     },
   },
   async created() {
-    const loadedPosts  = await getPosts(this)
-    this.$store.dispatch('setPosts', loadedPosts)
+    if(this.posts.length === 0) {
+      const loadedPosts  = await getPosts(this)
+      this.$store.dispatch('setPosts', loadedPosts)
+    }
   }
   /*
   async asyncData(context) {

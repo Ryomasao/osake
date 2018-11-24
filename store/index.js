@@ -152,6 +152,8 @@ const createStore = () => {
         },
         setUser(vuexContext, user) {
           vuexContext.commit('setUser', user)
+          const token = Cookie.get(token)
+          vuexContext.commit('setToken', token)
         }
       },
       getters: {
