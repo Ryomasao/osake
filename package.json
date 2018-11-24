@@ -10,6 +10,7 @@
     "start": "nuxt start",
     "generate": "nuxt generate",
     "heroku-postbuild": "npm run build",
+    "deploy": "npm run build && firebase deploy",
     "test": "mocha-webpack --webpack-config webpack.config.js  test/**/*.spec.js"
   },
   "dependencies": {
