@@ -10,6 +10,11 @@
           p.post__memo {{ loadedPost.memo }}
         .post__tags.tags
           .tag(v-for="tag in loadedPost.tags") {{ tag }}
+        .field
+          label.label 評価
+          .favos-flex
+            figure.image.stamp(v-for="n in loadedPost.favos")
+              img(src="~/assets/images/favo.png")
         .post__button
           nuxt-link.button.is-large.is-fullwidth.is-success(:to="'/mypage/posts/' + id") 編集する
 </template>
@@ -43,4 +48,12 @@
 </script>
 
 <style lang="scss" scoped>
+.stamp {
+  width: 10%;
+}
+
+.favos-flex {
+  display: flex;
+  flex-wrap: wrap;
+}
 </style>

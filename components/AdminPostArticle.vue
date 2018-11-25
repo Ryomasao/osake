@@ -13,12 +13,12 @@ form(@submit.prevent="onSave")
      tags-input(@put="tags => article.tags = tags" ref="tags")
   .field
     label.label 評価
-    .buttons.are-medium
-      a.button(@click="article.favos++") good
-      a.button(@click="article.favos > 0 && article.favos--") bad
+    .buttons.are-large
+      a.button.is-large(@click="article.favos++") good
+      a.button.is-large(@click="article.favos > 0 && article.favos--") bad
     .favos-flex
       figure.image.stamp(v-for="n in article.favos")
-        img(src="~/assets/images/favo.svg")
+        img(src="~/assets/images/favo.png")
   .field
     label.label めも
     .control
@@ -113,6 +113,11 @@ form(@submit.prevent="onSave")
 .form-footer {
   display: flex;
   justify-content: space-between;
+}
+
+
+.buttons {
+  justify-content: space-around;
 }
 
 .stamp {
