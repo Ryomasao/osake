@@ -12,6 +12,14 @@ form(@submit.prevent="onSave")
     .control
      tags-input(@put="tags => article.tags = tags" ref="tags")
   .field
+    label.label 評価
+    .buttons.are-medium
+      a.button(@click="article.favos++") good
+      a.button(@click="article.favos > 0 && article.favos--") bad
+    .favos-flex
+      figure.image.stamp(v-for="n in article.favos")
+        img(src="~/assets/images/favo.svg")
+  .field
     label.label めも
     .control
       textarea.textarea.is-info(type="text" placeholder="メモとかに使ってね" v-model="article.memo")
@@ -43,6 +51,7 @@ form(@submit.prevent="onSave")
           tags: [],
           date: new Date(),
           memo: '',
+          favos: 0
         },
         errors: [],
       }
@@ -95,20 +104,25 @@ form(@submit.prevent="onSave")
         this.$refs.tags.reset()
 
         this.article.date = new Date()
-      }
+      },
     }
   }
 </script>
 
-<style lang="sass">
-.form-footer
-  display: flex
-  justify-content: space-between
+<style lang="scss">
+.form-footer {
+  display: flex;
+  justify-content: space-between;
+}
 
-.form__overlay
-  width: 100vw
-  height: 100vh
-  background-color: black
+.stamp {
+  width: 10%;
+}
+
+.favos-flex {
+  display: flex;
+  flex-wrap: wrap;
+}
 
 </style>
 

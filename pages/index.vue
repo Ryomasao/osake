@@ -14,8 +14,8 @@
             :key="post.id" 
             :article="post" 
             mode="guest")
-      section.section
-        button.button.is-large.is-fullwidth.is-success(v-if="!hasAllPost" @click="getMorePosts") もっと見る
+      //section.section
+      //  button.button.is-large.is-fullwidth.is-success(v-if="!hasAllPost" @click="getMorePosts") もっと見る
           
 </template>
 

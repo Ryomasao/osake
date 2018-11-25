@@ -2,6 +2,21 @@ import firebase from '~/plugins/firebase'
 
 export const getPosts = async ({ $axios }, offset = 0) => {
 
+  try {
+    delete $axios.defaults.headers.common['if-none-match']
+    const url ='/articles.json' 
+    const loadedPosts = await $axios.$get(url, {
+      params: {
+        orderBy: '"$key"',
+      }
+    })
+    return loadedPosts
+  } catch(error) {
+    console.log('Error: getPost ', error)
+  }
+
+  return
+
   // axiosのonRequestではなく一旦クエリパラメータで渡す
   //const token = store.getters.token
 
