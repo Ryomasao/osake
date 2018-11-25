@@ -9,6 +9,10 @@
       section.section
         .container
           .header.title みんなのおもいで
+          .title.is-5 ならびかえ
+          .buttons
+            a.button(@click="sort = 'favo'") 評価順
+            a.button(@click="sort = ''") 日付順
           .articles
             PreviewArticle(v-for="post in posts"  
             :key="post.id" 
@@ -29,12 +33,39 @@ export default {
   components:{
     PreviewArticle
   },
+  data() {
+    return {
+      sort: ''
+    }
+  },
   computed: {
     isLogin() {
       return this.$store.getters.isLogin
     },
     posts() {
-      return this.$store.getters.loadedPosts
+      const posts = this.$store.getters.loadedPosts
+
+      //favosの降順
+      if(this.sort === 'favo') {
+        posts.sort((a, b) => {
+          return b.favos - a.favos
+        })
+      }
+
+      //IDの降順(timestamp)
+      if(this.sort === '') {
+        posts.sort((a, b) => {
+          if(new Date(a.date) > new Date(b.date)) {
+            return  -1
+          }
+          if(new Date(a.date) < new Date(b.date)) {
+            return  1
+          }
+          return 0
+        })
+      }
+
+      return posts
     },
     hasAllPost() {
       return this.$store.getters.hasAllPost

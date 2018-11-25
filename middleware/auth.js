@@ -7,7 +7,7 @@ export default async (context) => {
 
   if(process.client) {
     if(!context.store.getters.isLogin) {
-      return await context.store.dispatch('auth')
+      return context.redirect('/auth')
     }
   }
 
