@@ -1,7 +1,10 @@
 <template lang="pug">
   section.section
     .container
-      AdminPostArticle(@onSubmit="submit" ref="adminPostArticle")
+      AdminPostArticle(@onSubmit="submit" 
+                       ref="adminPostArticle"
+                       :propUserId="userId"
+                       )
     UploadingModal(:showModal="showModal")
     NotifyModal(:showModal="isError" 
     title="ごめんね" 
@@ -29,6 +32,11 @@
         isError: false,
         message: '',
         buttonText: '',
+      }
+    },
+    computed: {
+      userId() {
+        return this.$store.getters.user.uid
       }
     },
     methods: {

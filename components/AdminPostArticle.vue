@@ -40,7 +40,8 @@ form(@submit.prevent="onSave")
     },
     props: {
       loadedArticle: Object,
-      isUpdate: Boolean
+      isUpdate: Boolean,
+      propUserId: String
     },
     data() {
       return {
@@ -51,7 +52,8 @@ form(@submit.prevent="onSave")
           tags: [],
           date: new Date(),
           memo: '',
-          favos: 0
+          favos: 0,
+          userId: this.propUserId 
         },
         errors: [],
       }
