@@ -97,7 +97,7 @@ export const createPost = async ($axios, post, token) => {
   // testを書いて、ちゃんとasync await promiseをもっかい理解しよう
 
   //https://medium.com/google-cloud-jp/firestore2-920ac799345c
-  const url = `/users/${post.userId}.json?auth=${token}`
+  const url = `/users/${post.userId}/posts.json?auth=${token}`
 
   const postedData = await $axios.$post(url, post)
   .catch(error => {

@@ -53,7 +53,7 @@ form(@submit.prevent="onSave")
           date: new Date(),
           memo: '',
           favos: 0,
-          userId: this.propUserId 
+          userId: ''
         },
         errors: [],
       }
@@ -94,6 +94,7 @@ form(@submit.prevent="onSave")
           })
           return 
         }
+        this.article.userId = this.propUserId 
         this.$emit('onSubmit', this.article)
       },
       reset() {
