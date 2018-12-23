@@ -13,9 +13,9 @@ export const getPosts = async ({ $axios }, offset = 0) => {
     return loadedPosts
   } catch(error) {
     console.log('Error: getPost ', error)
+    return
   }
 
-  return
 
   // axiosのonRequestではなく一旦クエリパラメータで渡す
   //const token = store.getters.token
@@ -134,6 +134,9 @@ export const editPost = async ($axios, { id, post }, token) => {
 const uploadImage =  async(image, imageName) => {
     const storageRef = firebase.storage().ref()
     const imagesRef = storageRef.child('images')
+
+    const date = new Date().getTime()
+    imageName = date + '_' + imageName
     const spaceRef = imagesRef.child(imageName)
 
     // 画像のアップロードについてはtokenを指定していない
